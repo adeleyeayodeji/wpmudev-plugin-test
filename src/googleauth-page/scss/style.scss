@@ -1,0 +1,20 @@
+// Overwrite font path.
+$sui-font-path: '~@wpmudev/shared-ui/dist/fonts/';
+$sui-image-path: '~@wpmudev/shared-ui/dist/images/';
+
+// Share UI styles
+@import "@wpmudev/shared-ui";
+
+.sui-box-body {
+    .components-base-control {
+        min-width: 100%;
+
+        input[type="text"] {
+            min-width: 100%;
+        }
+
+        label {
+            display:block;
+        }
+    }
+}

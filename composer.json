@@ -1,0 +1,57 @@
+{
+	"name": "wpmudev/plugintest",
+	"description": "A plugin focused on testing coding skills.",
+	"type": "project",
+	"config": {
+		"platform": {
+			"php": "7.4"
+		},
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		},
+		"preferred-install": "dist",
+		"archive": {
+			"exclude": [
+				"Tests",
+				"tests",
+				"docs",
+				"*.md",
+				".*"
+			]
+		}
+	},
+	"homepage": "https://wpmudev.com/",
+	"license": "GPL-2.0+",
+	"authors": [
+		{
+			"name": "Incsub",
+			"homepage": "https://wpmudev.com"
+		}
+	],
+	"require": {
+		"php": ">=7.4",
+		"google/apiclient": "^2.15"
+	},
+	"require-dev": {
+		"wp-coding-standards/wpcs": "^3.0",
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"phpcompatibility/phpcompatibility-wp": "^2.1",
+		"phpunit/phpunit": "^9",
+		"wp-phpunit/wp-phpunit": "^5",
+		"yoast/phpunit-polyfills": "^1.0"
+	},
+	"scripts": {
+		"post-install-cmd": [
+			"Google_Task_Composer::cleanup"
+		],
+		"post-update-cmd": [
+			"Google_Task_Composer::cleanup"
+		]
+	},
+	"autoload": {
+		"classmap": [
+			"core/",
+			"app/"
+		]
+	}
+}

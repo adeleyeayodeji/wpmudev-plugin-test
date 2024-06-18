@@ -1,0 +1,25 @@
+definitions:
+  caches:
+    npm: ~/.npm
+  steps:
+    - step: &phpcs
+        name: PHPCS
+        image: php:7.4
+        caches:
+          - composer
+        script:
+          - docker-php-ext-install pcntl # add pcntl, so we can parallel process this
+          - apt-get update && apt-get install -y unzip ssh git --no-install-recommends
+          - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+          - composer install
+
+          - vendor/bin/phpcs --config-set show_progress 1
+          - vendor/bin/phpcs --config-set ignore_errors_on_exit 0 # force error quit the pipeline
+          - vendor/bin/phpcs --config-set ignore_warnings_on_exit 0 # force warnings quit the pipeline
+          - vendor/bin/phpcs --config-show
+
+          - vendor/bin/phpcs --standard=phpcs.ruleset.xml
+pipelines:
+  default: ## any branch
+     - step: *phpcs
