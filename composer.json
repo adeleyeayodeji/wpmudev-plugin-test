@@ -7,7 +7,8 @@
 			"php": "7.4"
 		},
 		"allow-plugins": {
-			"dealerdirect/phpcodesniffer-composer-installer": true
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"roots/wordpress-core-installer": true
 		},
 		"preferred-install": "dist",
 		"archive": {
@@ -30,7 +31,7 @@
 	],
 	"require": {
 		"php": ">=7.4",
-		"google/apiclient": "^2.15"
+		"google/apiclient": "2.16"
 	},
 	"require-dev": {
 		"wp-coding-standards/wpcs": "^3.0",
@@ -38,7 +39,8 @@
 		"phpcompatibility/phpcompatibility-wp": "^2.1",
 		"phpunit/phpunit": "^9",
 		"wp-phpunit/wp-phpunit": "^5",
-		"yoast/phpunit-polyfills": "^1.0"
+		"yoast/phpunit-polyfills": "^1.0",
+		"roots/wordpress": "^6.0"
 	},
 	"scripts": {
 		"post-install-cmd": [
@@ -46,7 +48,8 @@
 		],
 		"post-update-cmd": [
 			"Google_Task_Composer::cleanup"
-		]
+		],
+		"test": "phpunit"
 	},
 	"autoload": {
 		"classmap": [

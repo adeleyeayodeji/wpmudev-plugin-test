@@ -1,20 +1,42 @@
 // Overwrite font path.
-$sui-font-path: '~@wpmudev/shared-ui/dist/fonts/';
-$sui-image-path: '~@wpmudev/shared-ui/dist/images/';
+$sui-font-path: "~@wpmudev/shared-ui/dist/fonts/";
+$sui-image-path: "~@wpmudev/shared-ui/dist/images/";
 
 // Share UI styles
 @import "@wpmudev/shared-ui";
 
 .sui-box-body {
-    .components-base-control {
-        min-width: 100%;
+	.components-base-control {
+		min-width: 100%;
 
-        input[type="text"] {
-            min-width: 100%;
-        }
+		input[type="text"],
+		input[type="password"] {
+			min-width: 100%;
+		}
 
-        label {
-            display:block;
-        }
-    }
+		label {
+			display: block;
+		}
+	}
+}
+
+.sui-notice {
+	padding: 10px 15px;
+	border-radius: 4px;
+	margin-bottom: 20px;
+	box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+
+	.sui-notice-content {
+		font-size: 14px;
+	}
+
+	&.sui-notice-error {
+		//border left
+		border-left: 4px solid red;
+	}
+
+	&.sui-notice-success {
+		//border left
+		border-left: 4px solid green;
+	}
 }

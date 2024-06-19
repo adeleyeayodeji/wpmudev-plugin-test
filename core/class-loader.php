@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class to boot up plugin.
  *
@@ -13,12 +14,15 @@
 
 namespace WPMUDEV\PluginTest;
 
+use WPMUDEV\PluginTest\App\CLI\WPMU_CLI_Commands;
+use WPMUDEV\PluginTest\App\Cron_jobs\Cron_Jobs;
 use WPMUDEV\PluginTest\Base;
 
 // If this file is called directly, abort.
-defined( 'WPINC' ) || die;
+defined('WPINC') || die;
 
-final class Loader extends Base {
+final class Loader extends Base
+{
 	/**
 	 * Settings helper class instance.
 	 *
@@ -56,8 +60,9 @@ final class Loader extends Base {
 	 * @access protected
 	 * @return void
 	 */
-	protected function __construct() {
-		if ( ! $this->can_boot() ) {
+	protected function __construct()
+	{
+		if (!$this->can_boot()) {
 			return;
 		}
 
@@ -69,7 +74,8 @@ final class Loader extends Base {
 	 *
 	 * @return bool
 	 */
-	private function can_boot() {
+	private function can_boot()
+	{
 		/**
 		 * Checks
 		 *  - PHP version
@@ -79,8 +85,8 @@ final class Loader extends Base {
 		global $wp_version;
 
 		return (
-			version_compare( PHP_VERSION, $this->php_version, '>' ) &&
-			version_compare( $wp_version, $this->wp_version, '>' )
+			version_compare(PHP_VERSION, $this->php_version, '>') &&
+			version_compare($wp_version, $this->wp_version, '>')
 		);
 	}
 
@@ -91,8 +97,13 @@ final class Loader extends Base {
 	 * @access private
 	 * @return void
 	 */
-	private function init() {
+	private function init()
+	{
 		App\Admin_Pages\Auth::instance()->init();
 		Endpoints\V1\Auth::instance();
+		//init cron jobs
+		Cron_Jobs::instance()->init();
+		//init cli commands
+		WPMU_CLI_Commands::instance()->init();
 	}
 }

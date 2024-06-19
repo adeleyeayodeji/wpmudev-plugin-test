@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Google Auth Class.
  *
@@ -14,13 +15,13 @@
 namespace WPMUDEV\PluginTest\Core\Google_Auth;
 
 // Abort if called directly.
-defined( 'WPINC' ) || die;
+defined('WPINC') || die;
 
 use WPMUDEV\PluginTest\Base;
-use WPMUDEV\PluginTest\Endpoints\V1\Auth_Confirm;
 use Google\Client;
 
-class Auth extends Base {
+class Auth extends Base
+{
 	/**
 	 * Google client instance.
 	 *
@@ -36,7 +37,12 @@ class Auth extends Base {
 
 	private $redirect_url = '';
 
-	public function init() {
+	public function init()
+	{
+		// Set up client id and client secret.
+		$this->set_up();
+		//get the auth url
+		return $this->get_auth_url();
 	}
 
 	/**
@@ -51,14 +57,15 @@ class Auth extends Base {
 	 * @since 1.0.0
 	 *
 	 */
-	public function client( $new_instance = false ) {
+	public function client($new_instance = false)
+	{
 		// If requested for new instance.
-		if ( $new_instance || ! $this->client instanceof Client ) {
+		if ($new_instance || !$this->client instanceof Client) {
 			// Set new instance.
 			$this->client = new Client();
 
 			// Set our application name.
-			$this->client->setApplicationName( __( 'WPMU DEV Plugin Test', 'wpmudev-plugin-test' ) );
+			$this->client->setApplicationName(__('WPMU DEV Plugin Test', 'wpmudev-plugin-test'));
 		}
 
 		return $this->client;
@@ -72,16 +79,17 @@ class Auth extends Base {
 	 *
 	 * @return boolean
 	 */
-	public function set_up( string $client_id = '', string $client_secret = '' ): bool {
-		$client_id     = ! empty( $client_id ) ? $client_id : $this->get_client_id();
-		$client_secret = ! empty( $client_secret ) ? $client_secret : $this->get_client_secret();
+	public function set_up(string $client_id = '', string $client_secret = ''): bool
+	{
+		$client_id     = !empty($client_id) ? $client_id : $this->get_client_id();
+		$client_secret = !empty($client_secret) ? $client_secret : $this->get_client_secret();
 
-		$this->client()->setClientId( $client_id );
-		$this->client()->setClientSecret( $client_secret );
+		$this->client()->setClientId($client_id);
+		$this->client()->setClientSecret($client_secret);
 		// Todo: Set the return url based on new endpoint.
-		//$this->client()->setRedirectUri();
-		$this->client()->addScope( 'profile' );
-		$this->client()->addScope( 'email' );
+		$this->client()->setRedirectUri(rest_url('wpmudev/v1/auth/confirm'));
+		$this->client()->addScope('profile');
+		$this->client()->addScope('email');
 
 		return true;
 	}
@@ -91,11 +99,12 @@ class Auth extends Base {
 	 *
 	 * @return string
 	 */
-	private function get_client_id() {
-		if ( empty( $this->client_id ) ) {
+	private function get_client_id()
+	{
+		if (empty($this->client_id)) {
 			$settings = $this->get_settings();
 
-			$this->client_id = ! empty( $settings['client_id'] ) ? $settings['client_id'] : '';
+			$this->client_id = !empty($settings['client_id']) ? $settings['client_id'] : '';
 		}
 
 		return $this->client_id;
@@ -106,27 +115,54 @@ class Auth extends Base {
 	 *
 	 * @return string
 	 */
-	private function get_client_secret() {
-		if ( empty( $this->client_secret ) ) {
+	private function get_client_secret()
+	{
+		if (empty($this->client_secret)) {
 			$settings = $this->get_settings();
 
-			$this->client_secret = ! empty( $settings['client_secret'] ) ? $settings['client_secret'] : '';
+			$this->client_secret = !empty($settings['client_secret']) ? $settings['client_secret'] : '';
 		}
 
 		return $this->client_secret;
 	}
 
-	public function get_auth_url() {
+	public function get_auth_url()
+	{
 		return $this->client()->createAuthUrl();
 	}
 
-	protected function get_settings() {
+	protected function get_settings()
+	{
 		static $settings = null;
 
-		if ( is_null( $settings ) ) {
-			$settings = get_option( 'wpmudev_plugin_test_settings' );
+		if (is_null($settings)) {
+			$settings = get_option('wpmudev_plugin_tests_auth');
 		}
 
 		return $settings;
+	}
+
+	/**
+	 * get_user_info
+	 * @param string $code
+	 *
+	 * @return array
+	 */
+	public function get_user_info(string $code)
+	{
+		$this->client()->fetchAccessTokenWithAuthCode($code);
+
+		$access_token = $this->client()->getAccessToken();
+
+		if (!$access_token) {
+			throw new \Exception('Failed to obtain access token.');
+		}
+
+		$this->client()->setAccessToken($access_token);
+
+		$oauth2 = new \Google\Service\Oauth2($this->client());
+		$userinfo = $oauth2->userinfo->get();
+
+		return $userinfo;
 	}
 }

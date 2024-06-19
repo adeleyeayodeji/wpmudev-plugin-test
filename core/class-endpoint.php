@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Base class for all endpoint classes.
  *
@@ -18,9 +19,10 @@ use WP_REST_Response;
 use WP_REST_Controller;
 
 // If this file is called directly, abort.
-defined( 'WPINC' ) || die;
+defined('WPINC') || die;
 
-class Endpoint extends WP_REST_Controller {
+class Endpoint extends WP_REST_Controller
+{
 	/**
 	 * API endpoint version.
 	 *
@@ -55,7 +57,8 @@ class Endpoint extends WP_REST_Controller {
 	 *
 	 * @since 1.0.0
 	 */
-	protected function __construct() {
+	protected function __construct()
+	{
 		// Setup namespace of the endpoint.
 		$this->namespace = 'wpmudev/v' . $this->version;
 
@@ -69,17 +72,18 @@ class Endpoint extends WP_REST_Controller {
 	 * @return static Called class instance.
 	 * @since 1.0.0
 	 */
-	public static function instance() {
+	public static function instance()
+	{
 		static $instances = array();
 
 		// @codingStandardsIgnoreLine Plugin-backported
 		$called_class_name = get_called_class();
 
-		if ( ! isset( $instances[ $called_class_name ] ) ) {
-			$instances[ $called_class_name ] = new $called_class_name();
+		if (!isset($instances[$called_class_name])) {
+			$instances[$called_class_name] = new $called_class_name();
 		}
 
-		return $instances[ $called_class_name ];
+		return $instances[$called_class_name];
 	}
 
 	/**
@@ -89,8 +93,9 @@ class Endpoint extends WP_REST_Controller {
 	 * @since 1.0.0
 	 *
 	 */
-	public function register_hooks() {
-		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
+	public function register_hooks()
+	{
+		add_action('rest_api_init', array($this, 'register_routes'));
 	}
 
 	/**
@@ -102,8 +107,9 @@ class Endpoint extends WP_REST_Controller {
 	 * @since 1.0.0
 	 *
 	 */
-	public function edit_permission( $request ) {
-		$capable = current_user_can( 'manage_options' );
+	public function edit_permission($request)
+	{
+		$capable = current_user_can('manage_options');
 
 		/**
 		 * Filter to modify settings rest capability.
@@ -115,7 +121,7 @@ class Endpoint extends WP_REST_Controller {
 		 * @since 1.0.0
 		 *
 		 */
-		return apply_filters( 'wpmudev_plugintest_rest_settings_permission', $capable, $request );
+		return apply_filters('wpmudev_plugintest_rest_settings_permission', $capable, $request);
 	}
 
 	/**
@@ -128,7 +134,8 @@ class Endpoint extends WP_REST_Controller {
 	 * @since 1.0.0
 	 *
 	 */
-	public function get_response( $data = array(), $success = true ) {
+	public function get_response($data = array(), $success = true)
+	{
 		// Response status.
 		$status = $success ? 200 : 400;
 
@@ -146,7 +153,8 @@ class Endpoint extends WP_REST_Controller {
 	 *
 	 * @return string
 	 */
-	public function get_namespace() {
+	public function get_namespace()
+	{
 		return $this->namespace;
 	}
 
@@ -155,12 +163,14 @@ class Endpoint extends WP_REST_Controller {
 	 *
 	 * @return string
 	 */
-	public function get_endpoint() {
+	public function get_endpoint()
+	{
 		return $this->endpoint;
 	}
 
-	public function get_endpoint_url() {
-		return trailingslashit( rest_url() ) . trailingslashit( $this->get_namespace() ) . $this->get_endpoint();
+	public function get_endpoint_url()
+	{
+		return trailingslashit(rest_url()) . trailingslashit($this->get_namespace()) . $this->get_endpoint();
 	}
 
 	/**
@@ -170,6 +180,7 @@ class Endpoint extends WP_REST_Controller {
 	 *
 	 * @since 1.0.0
 	 */
-	public function register_routes() {
+	public function register_routes()
+	{
 	}
 }
