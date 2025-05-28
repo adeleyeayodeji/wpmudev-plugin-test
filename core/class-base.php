@@ -1,4 +1,5 @@
 <?php
+
 /**
  * File Description:
  * Base abstract class to be inherited by other classes
@@ -17,14 +18,15 @@ namespace WPMUDEV\PluginTest;
 use WPMUDEV\PluginTest\Singleton;
 
 // Abort if called directly.
-defined( 'WPINC' ) || die;
+defined('WPINC') || die;
 
 /**
  * Class Base
  *
  * @package WPMUDEV\PluginTest
  */
-abstract class Base extends Singleton {
+abstract class Base extends Singleton
+{
 	/**
 	 * Getter method.
 	 *
@@ -35,9 +37,10 @@ abstract class Base extends Singleton {
 	 * @return mixed Value of the property. Null if not available.
 	 * @since 1.0.0
 	 */
-	public function __get( $key ) {
+	public function __get($key)
+	{
 		// If set, get it.
-		if ( isset( $this->{$key} ) ) {
+		if (isset($this->{$key})) {
 			return $this->{$key};
 		}
 
@@ -54,7 +57,8 @@ abstract class Base extends Singleton {
 	 *
 	 * @since 1.0.0
 	 */
-	public function __set( $key, $value ) {
+	public function __set($key, $value)
+	{
 		$this->{$key} = $value;
 	}
 }
